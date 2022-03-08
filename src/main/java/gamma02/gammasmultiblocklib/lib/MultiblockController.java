@@ -9,12 +9,18 @@ import javax.annotation.Nullable;
 
 public interface MultiblockController {
     @Nonnull
-    Multiblock createMultiblock();
+    Multiblock buildMultiblock();
 
     void searchForMultiblock();
 
     @Nullable
     Multiblock getOwner();
+
+    @Nonnull
+    MultiblockType getType();
+
+
+    void setOwner(Multiblock multiblock);
 
     BlockApiLookup<MultiblockController, MultiblockType> TYPED = BlockApiLookup.get(new Identifier("multiblocklib", "typed_controller"), MultiblockController.class, MultiblockType.class);
 }
