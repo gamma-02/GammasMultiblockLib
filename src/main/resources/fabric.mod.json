@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "GammasMultiblockLib",
+  "version": "${version}",
+  "name": "GammasMultiblockLib",
+  "description": "A simple library to assist in the development of multiblocks",
+  "authors": [
+    "gamma_02"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/GammasMultiblockLib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "gamma02.gammasmultiblocklib.client.GammasMultiblockLibClient"
+    ],
+    "main": [
+      "gamma02.gammasmultiblocklib.GammasMultiblockLib"
+    ]
+  },
+  "mixins": [
+    "GammasMultiblockLib.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.2"
+  }
+}
