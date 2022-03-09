@@ -2,16 +2,18 @@ package gamma02.gammasmultiblocklib.lib;
 
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import org.lwjgl.system.CallbackI;
+import oshi.util.tuples.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface MultiblockController {
     @Nonnull
-    Multiblock buildMultiblock();
+    Multiblock buildMultiblock(Pair<World, MultiblockController> controllerWorldPair);
 
-    void searchForMultiblock();
+    boolean searchForMultiblock();
 
     @Nullable
     Multiblock getOwner();
