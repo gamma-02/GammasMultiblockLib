@@ -17,7 +17,7 @@ public interface MultiblockController {
     Multiblock getOwner();
 
     @Nonnull
-    MultiblockType getType();
+    MultiblockType getMultiblockType();
 
 
     void setOwner(Multiblock multiblock);
