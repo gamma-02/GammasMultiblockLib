@@ -22,7 +22,7 @@ public interface MultiblockConstituant {
 
     @Nullable
     default Multiblock getOwnerMultiblock(){
-        return this.getOwner().getOwner();
+        return this.getOwner().getMultiblockOwner();
     }
 
     /**

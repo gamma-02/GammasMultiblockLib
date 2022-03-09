@@ -3,9 +3,9 @@
   "minVersion": "0.8",
   "package": "gamma02.gammasmultiblocklib.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-  ],
-  "client": [
+  "server": [
+    "ServerMixin",
+    "ServerWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

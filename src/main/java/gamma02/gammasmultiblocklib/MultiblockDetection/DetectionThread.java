@@ -6,31 +6,37 @@ import net.minecraft.world.World;
 import oshi.util.tuples.Pair;
 
 import java.util.ArrayDeque;
-import java.util.function.Function;
 
 /**
  * ...why are you here? this is cursed stuff that you don't need to see lmao
  */
 public class DetectionThread extends Thread {
-    private ArrayDeque<Pair<Pair<World, MultiblockController>, Long>> queue;
+    private ArrayDeque<MultiblockController> queue;
+    private long ticks = 0;
+    boolean shouldContinue = true;
 
-    public DetectionThread(ArrayDeque<Pair<Pair<World, MultiblockController>, Long>> toFind){
+    public DetectionThread(ArrayDeque< MultiblockController> toFind){
         this.queue = toFind;
     }
 
     @Override
     public void run() {
-        while(!queue.isEmpty()){//run while the queue is not empty
-            if(queue.getFirst().getA().getB() == null){//determine if the MultiblockController has a valid multiblock
-                if(System.currentTimeMillis() > queue.getFirst().getB()) {
+        while(shouldContinue){//run while the queue is not empty
+            if(queue.getFirst().getMultiblockOwner() == null){//determine if the MultiblockController has a valid multiblock
+                if(queue.getFirst().getDetectionTickerType().isCountsWithTicks() ? this.ticks > queue.getFirst().getDetectionTickerType().getTime() : System.currentTimeMillis() > queue.getFirst().getDetectionTickerType().getTime()) {
 
-                    if (queue.getFirst().getA().getB().searchForMultiblock()) {
-                        queue.getFirst().getA().getB().setOwner(queue.getFirst().getA().getB().buildMultiblock(queue.getFirst().getA()));
-                        Multiblock.CACHE.put(queue.getFirst().getA().getB(), queue.getFirst().getA().getB().getOwner());
+                    if (queue.getFirst().searchForMultiblock()) {
+                        Multiblock m = queue.getFirst().buildMultiblock();
+                        if(m == null)
+                            continue;
+                        queue.getFirst().setOwner(m);
+                        queue.getFirst().onMultiblockFound();
+                        m.onMultiblockFound();
+                        Multiblock.CACHE.put(queue.getFirst(), queue.getFirst().getMultiblockOwner());
                     } else {
-                        Pair<Pair<World, MultiblockController>, Long> temp = queue.removeFirst();
-                        Pair<Pair<World, MultiblockController>, Long> temp2 = new Pair<>(temp.getA(), System.currentTimeMillis() + 1000);
-                        queue.addLast(temp2);
+                        MultiblockController temp = queue.removeFirst();
+                        temp.getDetectionTickerType().setTime((temp.getDetectionTickerType().isCountsWithTicks() ? temp.getDetectionTickerType().getTime() + this.ticks : temp.getDetectionTickerType().getDurationBetweenChecks() + System.currentTimeMillis()));
+                        queue.addLast(temp);
                     }
                 }
             }else{
@@ -38,6 +44,7 @@ public class DetectionThread extends Thread {
             }
             if(queue.isEmpty()){
                 try {
+                    this.ticks = 0;
                     this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -45,10 +52,18 @@ public class DetectionThread extends Thread {
             }
         }
 
-        super.run();
     }
 
-    public void addToQueue(Pair<Pair<World, MultiblockController>, Long> pair){
+    public void tick(){
+        if(!this.queue.isEmpty())
+            this.ticks++;
+    }
+
+    public void shouldContinue(boolean should){
+        this.shouldContinue = should;
+    }
+
+    public void addToQueue(MultiblockController pair){
         this.queue.add(pair);
     }
 }

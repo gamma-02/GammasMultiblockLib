@@ -6,7 +6,8 @@ package gamma02.gammasmultiblocklib.lib;
  */
 public enum MultiblockType {
     CUBE_CUSTOM,
-    CUBE_LAYERED,
+    STRUCTURE_TEIRED,
+    CUBE_CUSTOM_TEIRED,
     STRUCTURE;
 
 }
